@@ -1,0 +1,330 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\WebVampire.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// 24
+//
+
+1                       24      MOVEABLE PURE   "a.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WebVampire.ico"
+IDI_ICON_file           ICON    DISCARDABLE     "res\\file.ico"
+IDI_ICON_fileopen       ICON    DISCARDABLE     "res\\fileopen.ico"
+IDI_ICON_dir            ICON    DISCARDABLE     "res\\dir.ico"
+IDI_ICON_diropen        ICON    DISCARDABLE     "res\\diropen.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 WebVampire"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "WebVampire 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2010",IDC_STATIC,40,40,119,8
+    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "王安林 379184514",IDC_STATIC,43,26,72,8
+END
+
+IDD_WEBVAMPIRE_DIALOG DIALOGEX 0, 0, 676, 435
+STYLE WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "WebVampire v1.0  (王安林，379184514，2010.1.25) "
+FONT 9, "宋体"
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,609,2,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "取消",IDCANCEL,609,27,50,14,NOT WS_VISIBLE
+    LTEXT           "TODO: 在这里设置对话控制。",IDC_STATIC_web,177,35,81,31,
+                    SS_SUNKEN
+    CONTROL         "Tree1",IDC_TREE_list,"SysTreeView32",TVS_HASBUTTONS | 
+                    TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | 
+                    WS_BORDER | WS_TABSTOP,7,2,62,50
+    PUSHBUTTON      "遍历",IDC_bt_dirtree,609,47,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "打开选中文件夹",IDC_btdiropen,609,67,60,14,NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_EDIT_add,609,87,40,14,ES_AUTOHSCROLL | NOT 
+                    WS_VISIBLE
+    PUSHBUTTON      "创建目录",IDC_BUTTON2,609,107,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "后退",IDC_BUTTON_back,173,2,24,18
+    PUSHBUTTON      "前进",IDC_BUTTON_Forward,199,2,24,18
+    PUSHBUTTON      "主页",IDC_BUTTON_Home,225,2,24,18
+    EDITTEXT        IDC_EDIT_url,253,6,163,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "转到",IDC_BUTTON_gogo,420,2,24,18
+END
+
+IDD_ANLINHTMLEDIT_DIALOG DIALOGEX 0, 0, 652, 495
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "anlinHtmlEdit"
+FONT 9, "宋体", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "完成",IDOK,609,48,34,22
+    PUSHBUTTON      "取消",IDCANCEL,559,48,35,22
+    LTEXT           "标题",IDC_STATIC,10,10,33,8
+    EDITTEXT        IDC_EDIT_title,46,7,502,14,ES_AUTOHSCROLL
+    LTEXT           "原始链接",IDC_STATIC,10,34,33,8
+    EDITTEXT        IDC_EDIT_saveformURL,46,32,502,14,ES_AUTOHSCROLL
+    GROUPBOX        "正文",IDC_HTMLVIEW,0,72,651,422
+    EDITTEXT        IDC_EDIT_lockfile,46,49,352,14,ES_AUTOHSCROLL
+    LTEXT           "相关文件",IDC_STATIC,10,53,33,12
+    PUSHBUTTON      "浏览",IDC_BUTTON_lockfile,403,49,34,16
+    CTEXT           "\n王安林\n379184514\n2010.1.25\n",IDC_STATIC,573,7,50,
+                    35,SS_SUNKEN
+    PUSHBUTTON      "ifarme",IDC_BUTTON2,1,445,35,14,NOT WS_VISIBLE
+    PUSHBUTTON      "执行js",IDC_BUTTON3,54,445,33,14,NOT WS_VISIBLE
+    PUSHBUTTON      "函数js",IDC_BUTTON4,105,445,36,14,NOT WS_VISIBLE
+    PUSHBUTTON      "保存",IDC_BUTTON5,159,445,28,14,NOT WS_VISIBLE
+    PUSHBUTTON      "载入",IDC_BUTTON6,205,445,28,14,NOT WS_VISIBLE
+    PUSHBUTTON      "标题",IDC_title,251,445,28,14,NOT WS_VISIBLE
+    PUSHBUTTON      "原始链接",IDC_savefromURL,297,445,42,14,NOT WS_VISIBLE
+    PUSHBUTTON      "相关文件",IDC_lockfile,357,445,38,14,NOT WS_VISIBLE
+    PUSHBUTTON      "js保存",IDC_save,413,445,31,14,NOT WS_VISIBLE
+    PUSHBUTTON      "图片本地化",IDC_BUTTON8,462,445,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "图片保存",IDC_BUTTON9,530,445,38,14,NOT WS_VISIBLE
+    PUSHBUTTON      "提取原始链接",IDC_BUTTON10,586,445,57,14,NOT WS_VISIBLE
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "WebVampire Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "WebVampire\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2010\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "WebVampire.EXE\0"
+            VALUE "ProductName", "WebVampire 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_WEBVAMPIRE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 669
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 428
+    END
+
+    IDD_ANLINHTMLEDIT_DIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 651
+        VERTGUIDE, 46
+        TOPMARGIN, 7
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_TREEMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "树"
+    BEGIN
+        MENUITEM "添加",                        ID_M_ADD
+        MENUITEM "编辑",                        ID_M_EDIT
+        MENUITEM "删除",                        ID_M_DEL
+        MENUITEM "添加类",                      ID_M_ADDG
+        MENUITEM SEPARATOR
+        MENUITEM "复制",                        ID_M_CP
+        MENUITEM "剪切",                        ID_M_CUT
+        MENUITEM "粘贴",                        ID_M_P
+        MENUITEM "重命名",                      ID_M_RNAME
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+A16.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a16.gif"
+A17.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a17.gif"
+A4.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a4.gif"
+A5.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a5.gif"
+ALINE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\aline.gif"
+ANLINHTMLEDIT.HTM       HTML    DISCARDABLE     "res\\anlinHtmlEdit\\anlinHtmlEdit.htm"
+BOLD.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Bold.gif"
+CENTER.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Center.gif"
+CODE.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Code.gif"
+COPY.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Copy.gif"
+CUT.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Cut.gif"
+DELLINE.GIF             HTML    DISCARDABLE     "res\\anlinHtmlEdit\\DelLine.gif"
+IMG.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Img.gif"
+INDENT.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Indent.gif"
+ITALIC.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Italic.gif"
+LEFT.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Left.gif"
+LINE.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Line.gif"
+LINK.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Link.gif"
+LIST.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\List.gif"
+NUMBERLIST.GIF          HTML    DISCARDABLE     "res\\anlinHtmlEdit\\NumberList.gif"
+OUTDENT.GIF             HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Outdent.gif"
+PASTE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Paste.gif"
+REDO.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Redo.gif"
+RIGHT.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Right.gif"
+TABLE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Table.gif"
+TX.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\TX.gif"
+UNDERLINE.GIF           HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Underline.gif"
+UNDO.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Undo.gif"
+UNLINK.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Unlink.gif"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 WebVampire(&A)..."
+END
+
+#endif    // Chinese (中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\WebVampire.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

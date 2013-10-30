@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<META name=GENERATOR content="MSHTML 8.00.6001.18828">
+</HEAD>
+<STYLE type=text/css>
+DIV A.n {PADDING: 2px; DISPLAY: block; COLOR: #000000; LINE-HEIGHT: 16px; HEIGHT: 16px; TEXT-DECORATION: none}
+DIV A.n:hover {BACKGROUND: #e5e5e5}
+
+.as1{margin:1px;border:2px solid #9EC9EC;background-color:#E5E8E8;font-size:12px;cursor:pointer;}
+.as2{margin:1px;border:2px solid #E5E8E8;background-color:#E5E8E8;cursor:pointer;}
+</STYLE>
+
+<INPUT language=javascript  onclick='setMode(this.checked);menu.style.display = (this.checked)?"none":""' type=checkbox id=switchMode>HTML
+<DIV id=menu style="background:#E5E8E8;BORDER: #c5c5c5 1px solid;" >
+<IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Cut.gif"  title=剪切 onClick="format('Cut')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Copy.gif"  title=复制 onClick="format('Copy')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Paste.gif"  title=粘贴 onClick="format('Paste')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Undo.gif" title=撤消 onClick="execCommand('undo')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Redo.gif" title=重做 onClick="execCommand('Redo')" ><IMG src="aline.gif"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="TX.gif"  title=清除格式 onClick=format("removeFormat") ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="a4.gif"  title=字体 onClick='fDisplay("fontface")' ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="a5.gif"  title=字号 onClick="fDisplay('fontsize')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="a16.gif" title=字体颜色 onclick='gSetColorType="foreColor";fSetColor();fDisplay("dvForeColor");' ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="a17.gif" title=背景颜色 onclick='gSetColorType="backcolor";fSetColor();fDisplay("dvForeColor");' ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Bold.gif"  title=加粗 onClick="format('Bold');"  ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Italic.gif"  title=斜体 onClick="format('Italic');" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Underline.gif"  title=下划线 onClick="format('Underline')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="DelLine.gif"  title=删除线 onClick="format('strikethrough')"><IMG src="aline.gif"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Left.gif"  title=左对齐 onClick="format('Justifyleft')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Center.gif" title=中间对齐 onClick="format('Justifycenter')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Right.gif" title=右对齐 onClick="format('Justifyright')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="NumberList.gif" title=数字编号 onClick="format('Insertorderedlist')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="List.gif" title=项目编号 onClick="format('Insertunorderedlist')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Outdent.gif" title=减少缩进 onClick="format('Outdent')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Indent.gif" title=增加缩进 onClick="format('Indent')" ><IMG src="aline.gif"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Link.gif" title=添加链接 onclick=createLink() ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Unlink.gif" title=去掉链接 onclick="format('UnLink')"><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Line.gif" title=插入水平线 onclick="format('InsertHorizontalRule')" ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Img.gif" title=插入图片 onclick='fDisplay("InsertImageDiv")' ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Table.gif"title=插入表格 onclick='fDisplay("excelDiv")' ><IMG class="as2" onMouseOver="this.className='as1';" onMouseOut="this.className='as2'" src="Code.gif"title=插入代码域或转化选中为代码域 onclick=code() >
+</DIV>
+
+
+<DIV id=dvForeColor style="DISPLAY: none; WIDTH: 100px; POSITION: absolute;  HEIGHT: 100px" onclick='format(gSetColorType, event.srcElement.parentNode.bgColor);this.style.display = "none"' 
+onmousemove ='document.getElementById("tdView").bgColor = event.srcElement.parentNode.bgColor;document.getElementById("tdColorCode").innerHTML = event.srcElement.parentNode.bgColor;'>
+<TABLE style="BORDER-RIGHT: #888888 1px solid; BORDER-TOP: #888888 1px solid; BORDER-LEFT: #888888 1px solid; BORDER-BOTTOM: #888888 1px solid" height=25 cellSpacing=0 cellPadding=0 width=218>
+<TBODY>
+<TR>
+<TD id=tdView width=110>&nbsp;</TD>
+<TD id=tdColorCode align=middle bgColor=#ffffff></TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+
+
+
+<DIV id=fontface style="BORDER-RIGHT: #838383 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: #838383 1px solid; DISPLAY: none; PADDING-LEFT: 1px; Z-INDEX: 99; BACKGROUND: #ffffff; LEFT: 2px; PADDING-BOTTOM: 1px; BORDER-LEFT: #838383 1px solid; WIDTH: 110px; PADDING-TOP: 1px; BORDER-BOTTOM: #838383 1px solid; POSITION: absolute; TOP: 35px; HEIGHT: 270px" onkeydown='if(event.keyCode==27)this.style.display = "none"'>
+<A class=n style="FONT: 12px '宋体'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">宋体</A>
+<A class=n style="FONT: 12px '黑体'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">黑体</A>
+<A class=n style="FONT: 12px '楷体'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">楷体</A>
+<A class=n style="FONT: 12px '隶书'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">隶书</A>
+<A class=n style="FONT: 12px '幼圆'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">幼圆</A>
+<A class=n style="FONT: 12px Arial"  onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Arial</A>
+<A class=n style="FONT: 12px 'Arial Narrow'"    onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Arial Narrow</A>
+<A class=n style="FONT: 12px 'Arial Black'"     onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Arial Black</A>
+<A class=n style="FONT: 12px 'Comic Sans MS'"   onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Comic Sans MS</A>
+<A class=n style="FONT: 12px Courier"           onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Courier</A>
+<A class=n style="FONT: 12px System"            onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">System</A>
+<A class=n style="FONT: 12px 'Times New Roman'" onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Times New Roman</A>
+<A class=n style="FONT: 12px Verdana"           onClick="format('fontname',this.innerHTML);this.parentNode.style.display='none'" href="javascript:void(0)">Verdana</A>
+</DIV>
+
+<DIV id=fontsize style="BORDER-RIGHT: #838383 1px solid; PADDING-RIGHT: 1px; BORDER-TOP: #838383 1px solid; DISPLAY: none; PADDING-LEFT: 1px; BACKGROUND: #ffffff; LEFT: 26px; PADDING-BOTTOM: 1px; BORDER-LEFT: #838383 1px solid; WIDTH: 115px; PADDING-TOP: 1px; BORDER-BOTTOM: #838383 1px solid; POSITION: absolute; TOP: 35px; HEIGHT: 160px" onkeydown='if(event.keyCode==27)this.style.display = "none"'>
+<A class=n style="FONT-SIZE: xx-small;LINE-HEIGHT: 120%" onClick="format('fontsize',1);this.parentNode.style.display='none'" href="javascript:void(0)">极小</A>
+<A class=n style="FONT-SIZE: x-small; LINE-HEIGHT: 120%" onClick="format('fontsize',2);this.parentNode.style.display='none'" href="javascript:void(0)">特小</A>
+<A class=n style="FONT-SIZE: small;   LINE-HEIGHT: 120%" onClick="format('fontsize',3);this.parentNode.style.display='none'" href="javascript:void(0)">小</A>
+<A class=n style="FONT-SIZE: medium;  LINE-HEIGHT: 120%" onClick="format('fontsize',4);this.parentNode.style.display='none'" href="javascript:void(0)">中</A>
+<A class=n style="FONT-SIZE: large;   LINE-HEIGHT: 120%" onClick="format('fontsize',5);this.parentNode.style.display='none'" href="javascript:void(0)">大</A>
+<A class=n style="FONT-SIZE: x-large; LINE-HEIGHT: 120%" onClick="format('fontsize',6);this.parentNode.style.display='none'" href="javascript:void(0)">特大</A>
+<A class=n style="FONT-SIZE: xx-large;LINE-HEIGHT: 140%" onClick="format('fontsize',7);this.parentNode.style.display='none'" href="javascript:void(0)">极大</A>
+</DIV>
+
+
+<DIV id=excelDiv onkeydown='if(event.keyCode==13)excelok.click();if(event.keyCode==27)hideexcel.click();' style="DISPLAY: none; WIDTH:140px;POSITION: absolute; BORDER:2px solid #c3c9cf;PADDING: 1px;BACKGROUND:#f8f8f8">
+<table style="margin:10px 10px 5px 10px">
+<tr align=center><td colspan="2" style="font-size:15px;color:#777;background-color:#eee;">插入表格</td></tr>
+<tr><td style="font-size:12px;color:#777;">行数</td><td style="font-size:12px"><input style="border:1px solid #69f;width:80px;height:14px;line-height:12px;font-size:12px;" id="exlrows" value="3" />	</td></tr>
+<tr><td style="font-size:12px;color:#777;">列数</td><td style="font-size:12px"><input style="border:1px solid #69f;width:80px;height:14px;line-height:12px;font-size:12px;" id="exlcols" value="5" />	</td></tr>
+<tr><td style="font-size:12px;color:#777;">宽度</td><td style="font-size:12px"><input style="border:1px solid #69f;width:80px;height:14px;line-height:12px;font-size:12px;" id="exlwidth" value="300" />	</td></tr>
+
+<tr><td colspan="2" style="font-size:12px;color:#777;text-align:center;padding-top:6px;">
+<input style="font-size:12px;color:#777;border:1px solid #777;background-color:#f4f4f4;margin-right:10px;" type="button" id=excelok onClick='InitTable(exlrows.value,exlcols.value,exlwidth.value);document.getElementById("excelDiv").style.display = "none"' value="插入" />
+<input style="font-size:12px;color:#777;border:1px solid #777;background-color:#f4f4f4;" type="button" id=hideexcel onClick='document.getElementById("excelDiv").style.display = "none"'; value="取消" />
+</td></tr>
+</table>
+</DIV>
+
+
+<DIV id=InsertImageDiv onkeydown='if(event.keyCode==13)InsertImage.click();if(event.keyCode==27)hideInsertImageDiv.click();' style="DISPLAY: none; WIDTH:240px;POSITION: absolute; BORDER:2px solid #c3c9cf;PADDING: 1px;BACKGROUND:#f8f8f8">
+<table style="margin:10px 10px 5px 10px">
+<tr align=center><td colspan="2" style="font-size:15px;color:#777;background-color:#eee;padding-top:6px;">插入图片</td></tr>
+<tr><td colspan="2" style="display:none"><input id="fileInsertImage" type="file" > </td></tr>
+<tr><td><input id=file2InsertImage value="" onfocus="select()""border:1px solid #69f;width:80px;height:14px;line-height:12px;font-size:12px;">  </td><td>
+<input style="font-size:12px;color:#777;border:1px solid #777;background-color:#f4f4f4;" type="button" value="浏览..." onClick="fileInsertImage.click();file2InsertImage.value=fileInsertImage.value"></td></tr>
+<tr><td colspan="2" style="font-size:12px;color:#777;text-align:center;padding-top:6px;"><input id=InsertImage style="font-size:12px;color:#777;border:1px solid #777;background-color:#f4f4f4;"  type="button" value="插入" onClick='if(file2InsertImage.value)format("InsertImage",file2InsertImage.value);hideInsertImageDiv.click();'>
+<input id=hideInsertImageDiv style="font-size:12px;color:#777;border:1px solid #777;background-color:#f4f4f4;" type="button" onClick='document.getElementById("InsertImageDiv").style.display = "none"'; value="取消" />
+</td></tr>
+</table>
+</DIV>
+
+
+<iframe ID="HtmlEditor"  marginHeight=0 marginWidth=0 width="100%" height="490px" frameBorder="1"style="border:0px"></iframe>
+
+
+
+<textarea ID="sourceEditor" style="height:520px;width:100%;;background:#F2F1D7;display:none">
+</textarea>
+
+<input type="button" value="预览" onClick="test()">  
+<input type="button" value="清除" onClick="reset()">  
+<input type="button" value="复制全部" onClick="CopyAll()">
+<input type="button" value="选中全部" onClick="selectAll()">
+<input type="button" value="另存为" onClick="saveFile()"> 
+<input type="button" value="imgURLs" onClick="getIframeImgURL()">
+<input type="button" value="sourceEditor" onClick='alert(document.getElementById("sourceEditor").innerText)'>
+<input type="button" value="HtmlEditor" onClick='alert(window.frames["HtmlEditor"].document.getElementsByTagName("BODY")[0].innerHTML)'>
+<input type="button" value="修正本地url" onClick="xiuzheng()"> 
+<input type="button" value="imgsrc测试" onClick="imgsrc()"> 
+<input type="button" value="加图片原始链接，双击打开" onClick="imgsrc2()"> 
+<input type="button" value="Html" onClick='alert(window.frames["HtmlEditor"].document.getElementsByTagName("html")[0].innerHTML);'>
+<input type="button" value="settitle" onClick='settitle("5656565")'> 
+<input type="button" contenteditable="ture" value="原始链接" onClick='getalink("http://379184514.com")'> 
+<input type="button" value="相关文件" onClick='getfile("filename")'> 
+
+<br>
+
+
+<input id="fileImage" type="file" style="display:none"> 
+<input id=file2 value="" onfocus="select()">  
+<input type="button" value="浏览..." onClick="fileImage.click();file2.value=fileImage.value">  
+<input type="button" value="载入" onClick='document.getElementById("HtmlEditor").src=file2.value'>
+
+<br>
+<input type="button" value="载入2" onClick='jseval("document\.getElementById\(\"HtmlEditor\"\)\.src\=\"D\:\\\\00\.htm\"")'>
+
+</BODY>
+<SCRIPT language="javascript">
+function openfile(nn)
+{
+document.getElementById("HtmlEditor").src=nn;
+}
+var gSetColorType="";
+function init()
+{
+  window.frames["HtmlEditor"].document.write('<HTML><HEAD><TITLE>379184514</TITLE><style>body{padding-top:3px;padding-left:3px;padding-right:0px;margin:0px}p {margin:0;padding:0;}</style></HEAD><BODY></BODY></HTML>');
+  window.frames["HtmlEditor"].document.designMode="on";
+}
+init();
+function format(type, para)
+{
+	var f = window.frames["HtmlEditor"];
+	f.focus();
+	f.document.execCommand(type,false,para);
+}
+function setMode(bStatus)
+{
+	var sourceEditor = document.getElementById("sourceEditor");
+	var HtmlEditor = document.getElementById("HtmlEditor");
+	var f = window.frames["HtmlEditor"];
+	var body = f.document.getElementsByTagName("BODY")[0];
+  if(bStatus)
+  {
+    sourceEditor.style.display = "";
+    HtmlEditor.style.display = "none";
+    var cont =window.HtmlEditor.document.getElementsByTagName("html")[0].innerHTML;
+    var url=location.href.substring(0,location.href.lastIndexOf("/")+1);
+    //正则特殊字符，$( )*+.[]?\^{}|，如果目录中存在则正则表达式替换不能执行，目录中可能出现的特殊字符有$( )+.[]^{}
+  url=url.replace("\\","\\\\").replace("\$","\\\$").replace("\(","\\\(").replace("\)","\\\)").replace("\+","\\\+").replace("\.","\\\.").replace("\[","\\\[").replace("\]","\\\]").replace("\^","\\\^").replace("\{","\\\{").replace("\}","\\\}");
+
+    var r = new RegExp(url,"gi");
+    cont= cont.replace(r,""); 
+    document.getElementById("sourceEditor").innerText=cont;
+	}
+	else
+	{
+		sourceEditor.style.display = "none";
+		HtmlEditor.style.display = "";
+    body.innerHTML = sourceEditor.value;
+	}
+}
+
+function InitTable(rows,cols,width)
+{  
+  var builder='<table border="1" width="'+width+'">';
+  for(var r = 0; r < rows; r++)
+  {
+    builder+=('<tr>');
+    for(var c = 0; c < cols; c++)
+    {
+      builder+=('<td>&nbsp;</td>');
+    }
+    builder+=('</tr>');
+  }
+  builder+=('</table>');
+	//window.frames["HtmlEditor"].document.getElementsByTagName("BODY")[0].innerHTML+= builder;
+  var f = window.frames["HtmlEditor"];
+	f.focus();
+	f.document.selection.createRange().pasteHTML(builder);//在光标处插入
+}
+
+
+
+function fDisplay(idDiv)
+{
+	var idDiv =document.getElementById(idDiv);
+
+	var iX = window.event.clientX;
+	var iY = window.event.clientY;
+	idDiv.style.display = "";
+	idDiv.style.left = (iX-40) + "px";
+	idDiv.style.top = (iY-10) + "px";
+	idDiv.focus();
+}
+
+function createLink() 
+{
+	var sURL=window.prompt("输入链接地址", "");
+	if ((sURL!=null))format("CreateLink", sURL);
+}
+
+var i=0;
+function test()
+{
+  if(switchMode.checked == true)setMode(0);
+  temp = window.frames["HtmlEditor"].document.getElementsByTagName("html")[0].innerHTML;
+  testwin=open("","testwin","");
+  testwin.document.open();
+  testwin.document.write(temp);
+  testwin.document.close();
+}
+function saveFile()
+{
+  if(switchMode.checked == true)setMode(0);
+  temp = window.frames["HtmlEditor"].document.getElementsByTagName("html")[0].innerHTML;
+  var win=window.open("","win","height=10, width=10,top=10,left=10,alwaysLowered=yes");
+  win.document.write(temp);
+  win.document.execCommand('SaveAs','','copy.htm');
+  win.close();
+}
+
+function CopyAll()
+{
+  window.frames["HtmlEditor"].document.getElementsByTagName("BODY")[0].createTextRange().execCommand("Copy")
+  alert("复制成功!");
+}
+
+function selectAll()
+{
+  window.frames["HtmlEditor"].document.getElementsByTagName("BODY")[0].createTextRange().select();
+}
+
+function reset()
+{
+	window.frames["HtmlEditor"].document.getElementsByTagName("BODY")[0].innerHTML = "";
+}
+
+function code() 
+{
+  if(document.frames("HtmlEditor").document.selection && document.frames("HtmlEditor").document.selection.createRange) 
+  {
+    var f = window.frames["HtmlEditor"];
+    f.focus();
+    ss=document.frames("HtmlEditor").document.selection.createRange().htmlText;
+    window.frames["HtmlEditor"].document.execCommand("InsertTextArea",false,"code"+i);
+   
+    ff=document.frames("HtmlEditor").document.getElementById("code"+i);
+    ff.value=ss;
+    ff.wrap="off";
+    //ff.rows="6";
+    //ff.style.height="100px";
+    ff.style.width="90%";
+    ff.style.background="#F2F1D7";
+    ff.style.borderRight="1px #F3F8FC solid";
+    ff.style.overflowY="visible";//自适应高度
+    ff.readonly="true";
+
+    i++;
+    ff.focus();
+  }
+}
+function getalink(savefrom)
+{
+  var alink=document.frames("HtmlEditor").document.getElementById("原始链接")
+  if(alink==null)HtmlEditor.document.body.innerHTML+='<br><A id=原始链接 TARGET="_blank">0</A>';
+  alink=document.frames("HtmlEditor").document.getElementById("原始链接")
+  alink.href=savefrom
+  alink.innerHTML='<FONT style="BACKGROUND-COLOR: #00ff00" color=#ff0033 size=5>原始链接:'+alink.href+"</FONT>"
+
+//  alert(alink.id);
+ // alert(alink.innerText.replace("原始链接:",""));
+ // alert(alink.href);
+}		
+function getfile(filename)
+{
+var alink=document.frames("HtmlEditor").document.getElementById("相关文件")
+if(alink==null)HtmlEditor.document.body.innerHTML+='<br><A id=相关文件 TARGET="_blank">0</A>';
+alink=document.frames("HtmlEditor").document.getElementById("相关文件")
+alink.href=filename
+alink.innerHTML='<FONT style="BACKGROUND-COLOR: #000033"color=#ffff33><STRONG>相关文件:</STRONG></FONT><FONT color=#0000ff>'+alink.href+"</FONT>"
+
+}	
+function jseval(x)
+{		
+  return eval(x);//返回值为x中的最后一行的结果。
+}
+function settitle(x)
+{		
+  window.frames["HtmlEditor"].document.title=x;
+  return window.frames["HtmlEditor"].document.getElementsByTagName("title")[0].innerHTML;
+}		
+		
+function edithtml()
+{		
+  return window.frames["HtmlEditor"].document.getElementsByTagName("html")[0].innerHTML;
+}
+
+function xiuzheng()
+{
+  var cont=document.getElementById("sourceEditor").innerText;	
+  var url=//"res://D:\\WebVampire2(判断下载，增加大部分编辑器功能，菜单函数，添加，重做)\\Release\\WebVampire.exe/"
+location.href.substring(0,location.href.lastIndexOf("/")+1);
+  alert(url);
+  //正则特殊字符，$( )*+.[]?\^{}|，如果目录中存在则正则表达式替换不能执行，目录中可能出现的特殊字符有$( )+.[]^{}
+  url=url.replace("\/","\\\/").replace("\\","\\\\").replace("\$","\\\$").replace("\(","\\\(").replace("\)","\\\)").replace("\+","\\\+").replace("\.","\\\.").replace("\[","\\\[").replace("\]","\\\]").replace("\^","\\\^").replace("\{","\\\{").replace("\}","\\\}");
+  var r = new RegExp(url,"gi");
+  cont= cont.replace(r,""); 
+  document.getElementById("sourceEditor").innerText=cont;
+}
+
+function imgsrc()
+{
+  var imgs=document.frames("HtmlEditor").document.getElementsByTagName("img");
+  for(var i = 0;i<imgs.length;i++)
+  {
+    imgs[i].alt="a"+(i+1)+".gif"
+    imgs[i].title="双击查看原图" 
+    imgs[i].OnDblClick="window.open(this.alt)"
+  }
+}
+function imgsrc2()
+{
+  var imgs=document.frames("HtmlEditor").document.getElementsByTagName("img");
+//alert(imgs[0].src.slice(imgs[0].src.lastIndexOf("\/")));
+  for(var i = 0;i<imgs.length;i++)
+  {
+    if(imgs[i].src.slice(0,4)=="http")//防止重复操作
+    {
+      var srctmp=imgs[i].src;
+      imgs[i].src="image"+imgs[i].src.slice(imgs[i].src.lastIndexOf("\/"));
+      imgs[i].alt=srctmp;
+      imgs[i].title="双击查看原图";
+      imgs[i].OnDblClick="window.open(this.alt)";
+    }
+    //else alert(imgs[0].src.slice(0,4))
+  }
+}
+
+function getIframeImgURL()
+{
+  var imgs=document.frames("HtmlEditor").document.getElementsByTagName("img");
+  //var imgs = document.getElementsByTagName("img");
+  var imgURLs=new Array(imgs.length);
+  for(var i = 0;i<imgs.length;i++)
+  {
+     imgURLs[i] = imgs[i].src;//如果用document.getElementsByTagName("img")[i].src;每取一个图片地址就会对全部图片查找一次，这样效率比较低，还是储存在imgs中比较好！
+  }
+//以上代码最好放在页面的最后面，或window.onload事件里，这样就不会因为页面没有全部加载完而没有全部读取到img元素 
+  //alert(imgURLs);
+  return imgURLs.join(" ");
+}
+</SCRIPT>
+
+
+<script language="JavaScript">
+// Draw color selector
+var s = "";
+var hex = new Array(6)
+hex[0] = "FF"
+hex[1] = "CC"
+hex[2] = "99"
+hex[3] = "66"
+hex[4] = "33"
+hex[5] = "00"
+function drawCell(red, green, blue) 
+{
+	var color = '#' + red + green + blue;
+	s += '<TD BGCOLOR="' + color + '" style="height:12px;width:12px;" >';
+	s += '<IMG '+ ((document.all)?"":"src='place.gif'") +' HEIGHT=12 WIDTH=12>';
+	s += '</TD>';
+}
+function drawRow(red, blue) 
+{
+	s += '<TR>';
+	for (var i = 0; i < 6; ++i) 
+	{
+		drawCell(red, hex[i], blue)
+	}
+	s += '</TR>';
+}
+function drawTable(blue) 
+{
+	s += '<TABLE CELLPADDING=0 CELLSPACING=0 BORDER=0>';
+	for (var i = 0; i < 6; ++i) 
+	{
+		drawRow(hex[i], blue)
+	}
+	s += '</TABLE>';
+}
+function drawCube() 
+{
+	s += '<TABLE CELLPADDING=0 CELLSPACING=0 style="border:1px #888888 solid"><TR>';
+	for (var i = 0; i < 3; ++i) 
+	{
+		s += '<TD BGCOLOR="#FFFFFF">';
+		drawTable(hex[i])
+		s += '</TD>';
+	}
+	s += '</TR><TR>';
+	for (var i = 3; i < 6; ++i) 
+	{
+		s += '<TD BGCOLOR="#FFFFFF">';
+		drawTable(hex[i])
+		s += '</TD>';
+	}
+	s += '</TR></TABLE>';
+	return s;
+}
+function fSetColor()
+{
+	var dvForeColor =document.getElementById("dvForeColor");
+	if(dvForeColor.getElementsByTagName("TABLE").length == 1)
+	{
+		dvForeColor.innerHTML = drawCube() + dvForeColor.innerHTML;
+	}
+}
+</script>

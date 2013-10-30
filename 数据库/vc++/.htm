@@ -1,0 +1,1262 @@
+蓀?EAD>
+<META content="MSHTML 6.00.2900.5512" name=GENERATOR></HEAD>
+<BODY><PRE>WebVampire
+
+
+1.基于对话框的mfc，命名WebVampire。
+主对话框属性，样式，边框，选“调整大小”,最小化最大化框。
+调整对话框大小。
+
+
+
+2.添加控件：静态文本IDC_STATIC_web、树IDC_TREE_list。
+
+添加树，添加控制类变量，m_tree_ctrl。
+树样式：有按钮，有线条，根部的线。
+
+5.建立类向导，Class Info选项卡，Message filter选windows。
+添加消息WM_GETMINMAXINFO消息函数，添加代码
+//-------------------------------------------------------
+	lpMMI-&gt; ptMinTrackSize.x   =   400   ; //设置窗口最小值
+	lpMMI-&gt; ptMinTrackSize.y   =   400   ; 
+	
+//	lpMMI-&gt; ptMaxTrackSize.x   =   500   ; //设置窗口最大值
+//	lpMMI-&gt; ptMaxTrackSize.y   =   500   ; 
+//----------------------------------------------------------------------
+
+
+3.WebVampireDlg.h添加变量。
+//----------------------------
+	BOOL b_lbtdown;//鼠标左键是否按下。
+	BOOL b_spliter;//鼠标是否处于分界线上。
+	CRect rect_treelist;//树控件矩形。
+	CRect rect_static_web;//静态文本矩形（静态文本框供web控件用）。
+	CWnd *pstatic;//静态文本指针。
+	CRect rect_maindlg;//主窗口矩形
+//----------------------------
+4.OnInitDialog()添加
+//-------------------------------------------------------
+
+	b_lbtdown=FALSE;
+	b_spliter=FALSE;
+	pstatic=GetDlgItem(IDC_STATIC_web);
+
+	GetClientRect(rect_maindlg);
+	m_tree_ctrl.GetClientRect(&amp;rect_treelist);   //取得控件的全屏坐标
+	pstatic-&gt;GetClientRect(rect_static_web);
+
+	rect_treelist.left=0;
+	rect_treelist.top=5;
+	rect_treelist.right=200;
+	rect_static_web.top=5;
+	rect_treelist.bottom=rect_maindlg.bottom-0;
+	rect_static_web.bottom=rect_maindlg.bottom-0;
+	rect_static_web.right=rect_maindlg.right-0;
+	rect_static_web.left=rect_treelist.right+6;
+	
+	m_tree_ctrl.MoveWindow(rect_treelist);
+	
+	(*pstatic).MoveWindow(rect_static_web);
+//----------------------------------------------------------------
+
+
+WM_SIZING
+//----------------------------------------------------
+	CRect rect(pRect);
+	m_tree_ctrl.GetWindowRect(&amp;rect_treelist);   //取得控件的全屏坐标
+	pstatic-&gt;GetWindowRect(rect_static_web);
+	rect_static_web.right=rect.right-5;
+	rect_static_web.bottom=rect.bottom-10;
+	rect_treelist.bottom=rect.bottom-10;
+	this-&gt;ScreenToClient(&amp;rect_treelist); 
+	m_tree_ctrl.MoveWindow(rect_treelist);
+	
+	
+	this-&gt;ScreenToClient(&amp;rect_static_web); 
+	(*pstatic).MoveWindow(rect_static_web);
+//	m_page.MoveWindow(rect_static_web);
+	
+//	CString str,str2;
+//	str.Format("x1:%d,y1:%d,x2:%d,y2:%d",rect.top,rect.left,rect.right,rect.bottom);
+//	str2.Format("x1:%d,y1:%d,x2:%d,y2:%d",rect_treelist.top,rect_treelist.left,rect_treelist.right,rect_treelist.bottom);
+	//	AfxMessageBox(str);
+//	SetDlgItemText(IDC_STATIC_web,str+"\n"+str2);
+//-----------------------------------------------------	
+
+WM_MOUSEMOVE
+//--------------------------------------------
+	POINT   pt;   
+	GetCursorPos(&amp;pt);//取得当前鼠标坐标。
+	
+	//ClientToScreen(&amp;pt);
+	//ScreenToClient(&amp;pt);//换算到窗口坐标。
+	
+	m_tree_ctrl.GetWindowRect(&amp;rect_treelist);   //取得控件的全屏坐标。
+	
+	pstatic-&gt;GetWindowRect(rect_static_web);
+	//this-&gt;ScreenToClient(&amp;rect_treelist); 
+	//m_tree_ctrl.GetClientRect(rect_treelist);	
+	
+	if((pt.x &gt; rect_treelist.right) &amp;&amp; (pt.x &lt; rect_treelist.right+6))//当鼠标处于IDC_STATIC_web和IDC_TREE_list中间时。
+	{
+		SetCursor(LoadCursor(NULL,IDC_SIZEWE));//设置鼠标样式，左右箭头样式IDC_SIZEWE。
+		b_spliter=TRUE;	//鼠标在分界线上，可以拖动，也就是可以调节分界线位置。
+	}
+	else
+	{
+		b_spliter=FALSE;//鼠标不在分界线上，不可以拖动。
+	}
+	
+	if(b_lbtdown&amp;&amp;(pt.x &gt; rect_treelist.left+10)&amp;&amp;(pt.x &lt; rect_static_web.right-10 ))//当鼠标左键按下时调节分割条，并且不能超出树跟静态框的边界。
+	{
+		rect_treelist.right=pt.x-3;//调节树控件IDC_TREE_list的最右边保持鼠标坐标-3的位置。
+		this-&gt;ScreenToClient(&amp;rect_treelist); //换算到屏幕坐标。
+		m_tree_ctrl.MoveWindow(rect_treelist);//
+		
+		rect_static_web.left=pt.x+3;
+		this-&gt;ScreenToClient(&amp;rect_static_web); 
+		(*pstatic).MoveWindow(rect_static_web);
+		Invalidate(FALSE);
+	}
+	
+	
+//-------------------------------------------
+
+
+WM_LBUTTONDOWN
+//---------------------------------------
+	if(b_spliter) b_lbtdown=TRUE;//当鼠标处于分割条位置时点击鼠标左键。
+	SetCapture();//捕获鼠标。
+//---------------------------------------
+
+
+
+
+
+
+WM_LBUTTONUP
+//----------------------------------------------------------
+	b_lbtdown=FALSE;	
+	ReleaseCapture();//释放鼠标。
+//----------------------------------------------------------
+
+
+
+
+
+
+////////////////////////////////////----基本界面完成----///////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+WebVampireDlg.h加
+//---------------------------------------------------
+void BrowseDir(CString strDir,HTREEITEM parent);//遍历文件显示到树里。
+//----------------------------------------------------
+
+全局变量
+//--------------------------------------
+CImageList m_iImageList; 
+//-------------------------------------
+
+
+添加图标资源。
+file.ico文件IDI_ICON_file
+fileopen.ico文件打开IDI_ICON_fileopen 
+dir.ico目录IDI_ICON_dir 
+diropen.ico目录打开IDI_ICON_diropen 
+
+
+WebVampireDlg.cpp加
+//-----------------------------------------------------------------
+void CWebVampireDlg::BrowseDir( CString strDir, HTREEITEM parent )
+{
+	CFileFind ff;
+	CString szDir = strDir;
+	HTREEITEM	hSubItem;
+	
+	if(szDir.Right(1) != "\\")
+		szDir += "\\";
+	
+	szDir += "*.*";
+	
+	BOOL res = ff.FindFile(szDir);
+	while( res )
+	{
+		res = ff.FindNextFile();
+		if(ff.IsDirectory() &amp;&amp; !ff.IsDots())
+		{
+			CString strPath = ff.GetFilePath();
+			CString strTitle = ff.GetFileTitle();
+
+			hSubItem = m_tree.InsertItem( strTitle, parent );
+//			SetIcon()
+			m_tree.SetItemImage(hSubItem,2,3);   
+
+
+			BrowseDir( strPath, hSubItem );
+		}
+		else if(!ff.IsDirectory() &amp;&amp; !ff.IsDots())
+		{
+			CString strTitle = ff.GetFileName();//GetFileTitle();
+
+			hSubItem =m_tree.InsertItem( strTitle, parent );
+			m_tree.SetItemImage(hSubItem,0,1);   
+		}
+	}
+	ff.Close();
+}
+
+//----------------------------------------------------------------------------------
+
+
+
+添加按钮“遍历”。对应函数Onbtdirtree() 。
+//-----------------------------------------------------------------------------------------
+  	m_iImageList.Create(20, 20, TRUE|ILC_COLOR32,1, 0);
+		HICON hIconfile = (HICON)::LoadImage(::AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_ICON_file), IMAGE_ICON, 24, 24, 0);
+		HICON hIconfileopen = (HICON)::LoadImage(::AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_ICON_fileopen), IMAGE_ICON, 24, 24, 0);
+		HICON hIcondir = (HICON)::LoadImage(::AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_ICON_dir), IMAGE_ICON, 24, 24, 0);
+		HICON hIcondiropen = (HICON)::LoadImage(::AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_ICON_diropen), IMAGE_ICON, 24, 24, 0);
+		m_iImageList.Add(hIconfile);
+		m_iImageList.Add(hIconfileopen);
+		m_iImageList.Add(hIcondir);
+		m_iImageList.Add(hIcondiropen);
+		m_tree_ctrl.SetImageList (&amp;m_iImageList,TVSIL_NORMAL );
+		
+		m_tree_ctrl.DeleteAllItems();
+		m_tree_ctrl.InsertItem("数据库",0,0,NULL );
+		
+		CFont cfont; 
+		cfont.CreateFont(16,        //这个数字就是字体大小了
+			0,0,0,FW_NORMAL,   
+			FALSE,FALSE,   
+			0,   
+			GB2312_CHARSET,              // nCharSet
+			OUT_DEFAULT_PRECIS,        // nOutPrecision
+			CLIP_DEFAULT_PRECIS,       // nClipPrecision
+			DEFAULT_QUALITY,           // nQuality
+			DEFAULT_PITCH | FF_SWISS, "楷体"); 
+		
+		GetDlgItem(IDC_TREE_list)-&gt;SetFont(&amp;cfont); 
+		cfont.Detach();
+		
+		m_tree_ctrl.SetTextColor(RGB(235,115,0)); 
+		
+		m_tree_ctrl.SetItemImage(m_tree_ctrl.GetRootItem(),2,3); 
+		//参数：节点、没选中时图标标号、选中时图标标号
+		BrowseDir("数据库", m_tree_ctrl.GetRootItem());
+		m_tree_ctrl.Expand(m_tree_ctrl.GetRootItem(),TVE_EXPAND);
+//--------------------------------------------------------------------------------------------------
+
+
+
+解决图标失真：http://hi.baidu.com/wujizhangzz/blog/item/bfe753fbd4675017a9d311ad.html
+
+将
+//------------------------------------------------------------------------------------------
+
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"&gt;
+&lt;dependency&gt;
+    &lt;dependentAssembly&gt;
+      &lt;assemblyIdentity
+        type="win32"
+        name="Microsoft.Windows.Common-Controls"
+        version="6.0.0.0"
+        processorArchitecture="*"
+        publicKeyToken="6595b64144ccf1df"
+        language="*"
+        /&gt;
+    &lt;/dependentAssembly&gt;
+&lt;/dependency&gt;
+&lt;v3:trustInfo xmlns:v3="urn:schemas-microsoft-com:asm.v3"&gt;
+    &lt;v3:security&gt;
+      &lt;v3:requestedPrivileges&gt;
+        &lt;!-- level can be "asInvoker", "highestAvailable", or "requireAdministrator" --&gt;
+        &lt;v3:requestedExecutionLevel level="requireAdministrator" /&gt;
+      &lt;/v3:requestedPrivileges&gt;
+    &lt;/v3:security&gt;
+&lt;/v3:trustInfo&gt;
+&lt;/assembly&gt;
+
+//-----------------------------------------------------------------
+
+保存为a.manifest,然后在.rc文件中加入
+//-------------------------------------------------------
+1   24   "a.manifest"
+//-----------------------------------------------------------
+编译即可，在vista，win7下面就会看到小盾牌。
+
+
+
+
+
+
+
+添加按钮“打开选中文件夹”,函数Onbtdiropen() 。
+
+//--------------------------------------------------------------------------------------
+	CString name;
+	name=m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem());
+	HTREEITEM tmp=m_tree_ctrl.GetSelectedItem();
+	while(HTREEITEM tmp2=m_tree_ctrl.GetParentItem(tmp))
+	{
+		name=m_tree_ctrl.GetItemText(tmp2)+"\\"+name;
+		tmp=tmp2;
+	}
+
+
+	AfxMessageBox(name);
+
+	WinExec("explorer.exe "+name, SW_SHOWNORMAL); //速度快
+//---------------------------------------------------------------------------------------
+
+
+
+
+
+右键菜单：
+新建菜单，IDC_TREEMENU，添加选项
+添加树右键单击响应函数OnRclickTREElist，代码：
+//-------------------------------------------------------------------------------
+	CMenu       menu ,* pSubMenu;//定义下面要用到的cmenu对象
+	menu.LoadMenu(IDC_TREEMENU);//装载自定义的右键菜单
+	pSubMenu = menu.GetSubMenu(0);//获取第一个弹出菜单，所以第一个菜单必须有子菜单
+	CPoint oPoint;//定义一个用于确定光标位置的位置
+	GetCursorPos(&amp;oPoint);//获取当前光标的位置，以便使得菜单可以跟随光标
+	
+	pSubMenu-&gt;TrackPopupMenu (TPM_LEFTALIGN, oPoint.x, oPoint.y, this); //在指定位置显示弹出菜单
+//---------------------------------------------------------------------------------------------------
+
+
+
+各菜单函数：
+//----------------------------------------------------------------------------------------------
+void CWebVampireDlg::OnMAdd() 
+{
+	// TODO: Add your command handler code here
+	CString stradd;
+	GetDlgItemText(IDC_EDIT_add,stradd);
+	AfxMessageBox(stradd);
+	if(stradd=="")return;
+	CString strItem=stradd;
+	HTREEITEM hItem=m_tree_ctrl.GetSelectedItem();
+	m_tree_ctrl.InsertItem(strItem,hItem);
+	m_tree_ctrl.Expand(hItem,TVE_EXPAND);
+	AfxMessageBox("添加！");
+
+}
+
+
+BOOL DocumentManagement(LPCTSTR lpszFromPath,LPCTSTR lpszToPath,INT method);
+
+CString cpcutdir;
+BOOL iscut=FALSE;
+	
+void CWebVampireDlg::OnMCp() 
+{
+	// TODO: Add your command handler code here
+	cpcutdir=GetFullname();
+	AfxMessageBox("复制:"+GetFullname());
+	
+}
+
+void CWebVampireDlg::OnMCut() 
+{
+	// TODO: Add your command handler code here
+	cpcutdir=GetFullname();
+	iscut=TRUE;
+	AfxMessageBox("剪切:"+GetFullname());
+}
+
+void CWebVampireDlg::OnMDel() 
+{
+	// TODO: Add your command handler code here
+	AfxMessageBox("删除："+GetFullname());
+	/*
+	WinExec("cmd.exe /c rd /s /q \""+GetFullname()+"\"",SW_SHOWNORMAL);
+	WinExec("cmd.exe /c del /q \""+GetFullname()+"\"",SW_SHOWNORMAL);
+	*/
+	DocumentManagement(GetFullname(),"",FO_DELETE);
+	HTREEITEM hItem=m_tree_ctrl.GetSelectedItem();
+	m_tree_ctrl.DeleteItem(hItem);
+	m_tree_ctrl.Expand(hItem,TVE_EXPAND);
+}
+
+void CWebVampireDlg::OnMEdit() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CWebVampireDlg::OnMRname() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CWebVampireDlg::OnMP() 
+{
+	// TODO: Add your command handler code here
+	//system("cmd.exe xcopy /e d:\\addfile c:\\");
+	
+	//WinExec("cmd.exe /c xcopy \/e d:\\addfile c:\\", SW_SHOWNORMAL);//必须加参数/c
+	int nPos = cpcutdir.ReverseFind('\\'); 
+	CString cpcutname=cpcutdir.Mid(nPos+1,cpcutdir.GetLength()-nPos);
+	AfxMessageBox("节点名："+cpcutname);
+
+	/*调用dos没法等待其结束，剪切时没剪切完就删掉了
+	WinExec("xcopy /e/y/i \""+cpcutdir+"\" \""+GetFullname()+"\\"+cpcutname+"\"",SW_SHOWNORMAL);//SW_HIDE);
+	if(iscut)
+	{
+		WinExec("cmd.exe /c rd /s /q \""+cpcutdir+"\"",SW_SHOWNORMAL);
+		WinExec("cmd.exe /c del /q \""+cpcutdir+"\"",SW_SHOWNORMAL);
+		iscut=FALSE;
+	}
+	*/
+	 if(iscut)
+	 {
+		 DocumentManagement(cpcutdir,GetFullname(),FO_MOVE);
+		 iscut=FALSE;
+	 }
+	 else
+	 {
+		 DocumentManagement(cpcutdir,GetFullname(),FO_COPY);
+	 }
+	HTREEITEM hItemsel=m_tree_ctrl.GetSelectedItem();
+	
+	CString hItemseltext = m_tree_ctrl.GetItemText(hItemsel);
+	CString hItemfullname=GetFullname();
+	HTREEITEM hItemselparent=m_tree_ctrl.GetParentItem(hItemsel);
+	m_tree_ctrl.DeleteItem(hItemsel);
+	HTREEITEM hItemselparent22=m_tree_ctrl.InsertItem(hItemseltext,hItemselparent);
+	m_tree_ctrl.SetItemImage(hItemselparent22,2,3); 
+	BrowseDir(hItemfullname, hItemselparent22);//只刷新修改部分，提高效率
+	
+	m_tree_ctrl.Expand(hItemselparent22,TVE_EXPAND);
+}
+
+CString CWebVampireDlg::GetFullname()
+{
+	CString dirfullnametmp=m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem());
+	HTREEITEM tmp=m_tree_ctrl.GetSelectedItem();
+	while(HTREEITEM tmp2=m_tree_ctrl.GetParentItem(tmp))
+	{
+		dirfullnametmp=m_tree_ctrl.GetItemText(tmp2)+"\\"+dirfullnametmp;
+		tmp=tmp2;
+	}
+	//AfxMessageBox(dirfullnametmp);
+	return dirfullnametmp;
+}
+
+
+BOOL DocumentManagement(LPCTSTR lpszFromPath,LPCTSTR lpszToPath,INT method)
+{
+int nLengthFrm = strlen(lpszFromPath);
+char *NewPathFrm = new char[nLengthFrm+2];
+strcpy(NewPathFrm,lpszFromPath);
+NewPathFrm[nLengthFrm] = '\0';
+NewPathFrm[nLengthFrm+1] = '\0';
+
+    SHFILEOPSTRUCT FileOp; 
+    ZeroMemory((void*)&amp;FileOp,sizeof(SHFILEOPSTRUCT));
+    
+    FileOp.fFlags = FOF_NOCONFIRMATION ; 
+    FileOp.hNameMappings = NULL; 
+    FileOp.hwnd = NULL; 
+    FileOp.lpszProgressTitle = NULL; 
+    FileOp.pFrom = NewPathFrm; 
+    FileOp.pTo = lpszToPath; 
+    FileOp.wFunc = method;//FO_COPY; FO_DELETE;FO_MOVE; FO_RENAME; 
+    
+    return SHFileOperation(&amp;FileOp) == 0;
+}
+
+//-----------------------------------------------------------------------------------------------
+
+
+优化函数
+//-----------------------------------------------------------------------------
+void CWebVampireDlg::Onbtdiropen() 
+{
+	WinExec("explorer.exe "+GetFullname(), SW_SHOWNORMAL); //速度快
+}
+//-------------------------------------------------------------------------------
+
+
+改目录结构，只操作文件夹，跟文件对应的文件夹显示为文件。
+
+D:\WEBVAMPIRE(改目录结构,改文件操作函数)\数据库
+├─HTML--JS
+├─vc++
+│  ├─VC中动态改变控件和对话框字体(大小)_成功只有一个：按照自己的方式，去度过一生~~~
+│  │  │  VC中动态改变控件和对话框字体(大小)_成功只有一个：按照自己的方式，去度过一生~~~.htm
+│  │  │
+│  │  ├─file
+│  │  │      Icon_4.ico
+│  │  │      Icon_5.ico
+│  │  │
+│  │  └─image
+│  │          hhhh.png
+│  │
+│  └─预览（成功）
+│      │  预览（成功）.htm
+│      │
+│      ├─file
+│      │
+│      └─image
+│
+├─单片机
+└─电脑基础
+
+//--------------------------------------------------------------------------------------------------
+void CWebVampireDlg::BrowseDir(CString strDir,HTREEITEM parent)
+{
+	CFileFind ff;
+	CString szDir = strDir;
+	HTREEITEM hSubItem;
+	
+	if(szDir.Right(1) != "\\")
+		szDir += "\\";
+	
+	szDir += "*.*";
+	
+	BOOL res = ff.FindFile(szDir);
+	while( res )
+	{
+		res = ff.FindNextFile();
+		if(ff.IsDirectory() &amp;&amp; !ff.IsDots())
+		{
+			CString strPath = ff.GetFilePath();
+			CString strTitle = ff.GetFileTitle();
+
+			if(strTitle!="image"&amp;&amp;strTitle!="file") //不处理资源目录"image"和"file"
+			{
+				hSubItem = m_tree_ctrl.InsertItem(strTitle, parent);
+				m_tree_ctrl.SetItemImage(hSubItem,2,3);
+				BrowseDir( strPath, hSubItem );
+			}
+			else
+			{
+				m_tree_ctrl.SetItemImage(parent,0,1);//底层目录显示为文件图标。
+			}
+		}
+		/*不再处理文件
+		else if(!ff.IsDirectory() &amp;&amp; !ff.IsDots())
+		{
+			CString strTitle = ff.GetFileName();//GetFileTitle();
+
+			hSubItem =m_tree_ctrl.InsertItem( strTitle, parent );
+			m_tree_ctrl.SetItemImage(hSubItem,0,1);   
+		}
+		*/
+	}
+	ff.Close();
+}
+//------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+复制HtmlCtrl.h和HtmlCtrl.cpp到工程目录。添加到工程(“工程”-“增加到工程”-“文件”)。
+
+在StdAfx.h最后“#endif”之前添加
+//--------------------------
+#include   &lt;afxhtml.h&gt;
+//---------------------------
+
+在edithtmlDlg.h添加。
+//--------------------------------------------------------------------
+#include "HtmlCtrl.h"
+//--------------------------------------------------------------------
+//--------------------------------------------------------------------
+protected:
+	CHtmlCtrl m_page;
+//---------------------------------------------------------------
+
+在OnInitDialog()添加：
+//--------------------------------------------------------------------
+	VERIFY(m_page.CreateFromStatic(IDC_STATIC_web, this));
+//-----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+每次选中树时显示网页。
+TVN_SELCHANGED
+/-----------------------------------------------------------------------------------
+void CWebVampireDlg::OnSelchangedTREElist(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+	// TODO: Add your control notification handler code here
+	if(!m_tree_ctrl.GetChildItem(m_tree_ctrl.GetSelectedItem()))
+	{
+	//WinExec("explorer.exe "+GetFullname()+"\\"+m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem())+".htm", SW_SHOWNORMAL); //速度快
+	//m_page.Navigate2("\""+GetFullname()+"\\"+m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem())+".htm\"");
+	//m_page.Navigate2("D:\\WebVampire(改目录结构,改文件操作函数)\\数据库\\vc++\\预览（成功）\\预览（成功）.htm");
+	/*获得路径第一种方法。
+		char buf[255];
+		GetCurrentDirectory(sizeof(buf),buf);
+		//path=path+"\\数据库\\vc++\\预览（成功）\\预览（成功）.htm";
+		CString aaa=buf;
+		
+		aaa+="\\"+GetFullname()+"\\"+m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem())+".htm";
+		AfxMessageBox(aaa);
+		m_page.Navigate2(aaa);
+		*/
+		CString path;
+		GetCurrentDirectory(MAX_PATH,path.GetBuffer(MAX_PATH));
+		path.ReleaseBuffer();
+		path+="\\"+GetFullname()+"\\"+m_tree_ctrl.GetItemText(m_tree_ctrl.GetSelectedItem())+".htm";
+		AfxMessageBox(path);
+		m_page.Navigate2(path);
+	}
+	*pResult = 0;
+}
+//---------------------------------------------------------------------------------------------------
+
+
+
+
+最大化、最小化、还原
+WM_SIZE
+//--------------------------------------------------------------------------------------------------
+void CWebVampireDlg::OnSize(UINT nType, int cx, int cy) 
+{
+	CDialog::OnSize(nType, cx, cy);
+	
+	// TODO: Add your message handler code here
+	if(nType == SIZE_RESTORED)  //还原
+	{  
+		m_tree_ctrl.GetWindowRect(&amp;rect_treelist);
+		this-&gt;ScreenToClient(&amp;rect_treelist);
+		rect_treelist.bottom=cy;
+		m_tree_ctrl.MoveWindow(rect_treelist);
+		
+		m_page.GetWindowRect(rect_static_web);
+		this-&gt;ScreenToClient(&amp;rect_static_web); 
+		rect_static_web.right=cx;
+		rect_static_web.bottom=cy;
+		m_page.MoveWindow(rect_static_web); 
+	} 
+	if(nType == SIZE_MAXIMIZED)  //最大化
+	{  
+		m_tree_ctrl.GetWindowRect(&amp;rect_treelist);
+		pstatic-&gt;GetWindowRect(rect_static_web);
+		this-&gt;ScreenToClient(&amp;rect_treelist); 
+		this-&gt;ScreenToClient(&amp;rect_static_web); 
+		rect_static_web.right=cx-5;
+		rect_static_web.bottom=cy-5;
+		rect_treelist.bottom=cy-5;
+		
+		m_tree_ctrl.MoveWindow(rect_treelist);
+		(*pstatic).MoveWindow(rect_static_web);             
+	} 
+
+}
+//--------------------------------------------------------------------------------------------------
+
+
+
+/////////////////////////////////////-----显示部分完成-----/////////////////////////////////////////
+
+
+添加编辑对话框
+IDD_ANLINHTMLEDIT_DIALOG
+
+
+修改树右键菜单函数
+//----------------------------------------------
+void CWebVampireDlg::OnMAdd() 
+{
+	// TODO: Add your command handler code here
+/*
+	CString stradd;
+	GetDlgItemText(IDC_EDIT_add,stradd);
+	AfxMessageBox(stradd);
+	if(stradd=="")return;
+	CString strItem=stradd;
+	HTREEITEM hItem=m_tree_ctrl.GetSelectedItem();
+	m_tree_ctrl.InsertItem(strItem,hItem);
+	m_tree_ctrl.Expand(hItem,TVE_EXPAND);
+	AfxMessageBox("添加！");
+*/
+	CanlinHtmlEditDlg adddlg;
+	adddlg.DoModal();
+}
+//----------------------------------------------
+测试可以弹出。
+
+
+为对话框IDD_ANLINHTMLEDIT_DIALOG添加类CanlinHtmlEditDlg，基类CDialog，文件名anlinHtmlEditDlg.h。
+
+添加资源
+//-------------------------------------------------------------------------------------------
+ANLINHTMLEDIT.HTM       HTML    DISCARDABLE     "res\\anlinHtmlEdit\\anlinHtmlEdit.htm"
+CUT.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Cut.gif"
+COPY.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Copy.gif"
+PASTE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Paste.gif"
+UNDO.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Undo.gif"
+REDO.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Redo.gif"
+TX.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\TX.gif"
+A4.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a4.gif"
+A5.GIF                  HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a5.gif"
+A16.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a16.gif"
+A17.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\a17.gif"
+BOLD.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Bold.gif"
+ITALIC.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Italic.gif"
+UNDERLINE.GIF           HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Underline.gif"
+DELLINE.GIF             HTML    DISCARDABLE     "res\\anlinHtmlEdit\\DelLine.gif"
+LEFT.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Left.gif"
+CENTER.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Center.gif"
+RIGHT.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Right.gif"
+NUMBERLIST.GIF          HTML    DISCARDABLE     "res\\anlinHtmlEdit\\NumberList.gif"
+LIST.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\List.gif"
+OUTDENT.GIF             HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Outdent.gif"
+INDENT.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Indent.gif"
+ALINE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\aline.gif"
+LINK.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Link.gif"
+UNLINK.GIF              HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Unlink.gif"
+LINE.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Line.gif"
+IMG.GIF                 HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Img.gif"
+TABLE.GIF               HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Table.gif"
+CODE.GIF                HTML    DISCARDABLE     "res\\anlinHtmlEdit\\Code.gif"
+//---------------------------------------------------------------------------------------
+
+给CanlinHtmlEditDlg类添加
+
+//**********************
+#include "HtmlCtrl.h"
+//***********************
+
+//****************************
+	CHtmlCtrl m_anlinedithtmlpage;
+//******************************
+
+
+OnInitDialog()
+	
+//----------------------------------------------------------------------
+	VERIFY(m_anlinedithtmlpage.CreateFromStatic(IDC_HTMLVIEW, this));
+	m_anlinedithtmlpage.LoadFromResource(_T("ANLINHTMLEDIT.HTM"));
+//-----------------------------------------------------------------
+
+
+
+解决CHtmlView中载入的网页采用iframe编辑模式无法输入回车
+在HtmlCtrl.h中添加
+//------------------------------------------------------------------------
+	virtual BOOL PreTranslateMessage(MSG* pMsg) ;
+//------------------------------------------------------------------------
+
+在HtmlCtrl.cpp中添加
+//----------------------------------------------------------------------------------
+BOOL CHtmlCtrl::PreTranslateMessage(MSG* pMsg) 
+{
+  if(pMsg-&gt;message == WM_KEYDOWN &amp;&amp; (pMsg-&gt;wParam == VK_RETURN ||pMsg-&gt;wParam == VK_ESCAPE))     
+  {     
+      ::TranslateMessage(pMsg);     
+  }     
+  return   CHtmlView::PreTranslateMessage(pMsg);   
+}
+//-----------------------------------------------------------------------------------
+
+
+（现在虽然iframe编辑模式下回车正常了，不过源代码模式的回车相当于2次回车了，待解决）
+
+#include &lt;atlbase.h&gt;
+
+CComModule _Module;		// 由于要使用 CComDispatchDriver ATL的智能指针，
+						// 所以声明它是必须的
+
+#include &lt;mshtml.h&gt;		// 所有 IHTMLxxxx 的接口声明
+#include &lt;atlcom.h&gt;
+
+
+2种方法获得CHtmlView的IHTMLDocument2接口
+	/*
+	//---------------方法1--------------------------------
+	
+	  IHTMLDocument2 *m_pHtmlDoc2=NULL;
+	  LPDISPATCH lpDispatch;
+	  lpDispatch=m_page.GetHtmlDocument(); 
+	  ASSERT(lpDispatch);
+	  //get html document from IDispatch
+	  HRESULT hr=lpDispatch-&gt;QueryInterface(IID_IHTMLDocument2, (void**)&amp;m_pHtmlDoc2); 
+	  
+		if(m_pHtmlDoc2!=NULL) m_pHtmlDoc2-&gt;get_body(&amp;pDocElem);
+		else AfxMessageBox("m_pHtmlDoc2==NULL");
+	*/	
+	
+
+	
+	///*
+	//-----------------------------方法2-----------------------------------------
+	IHTMLDocument2 *pDoc=(IHTMLDocument2 *)(m_anlinedithtmlpage.GetHtmlDocument()); 
+//	if(pDoc!=NULL) pDoc-&gt;get_body(&amp;pDocElem);
+//	else AfxMessageBox("pDoc==NULL");
+	//------------------------------------------------------------------------
+	//*/
+	
+	
+ifarme内容.即编辑内容源码，只有body部分。
+//----------------------------------------------------------------------------------	
+	IHTMLFramesCollection2 *pFramesCollection=NULL; 
+	pDoc-&gt;get_frames(&amp;pFramesCollection);
+	
+	VARIANT varindex,varresult; 
+	varresult.vt=VT_DISPATCH; 
+	varindex.vt = VT_I4; 
+	varindex.lVal=0;
+	pFramesCollection-&gt;item(&amp;varindex, &amp;varresult);
+	IHTMLDocument2 *pFrameDoc=NULL; 
+	IHTMLWindow2 *pHTMLWnd=NULL;
+	((LPDISPATCH)varresult.ppdispVal)-&gt;QueryInterface(IID_IHTMLWindow2, (LPVOID *)&amp;pHTMLWnd);
+	
+	
+	pHTMLWnd-&gt;get_document(&amp;pFrameDoc);
+	pFrameDoc-&gt;get_body(&amp;pDocElem);
+	if(pDocElem) 
+	{ 
+		// ASSERT(SUCCEEDED(hr)); 
+		BSTR   bstrHTML; 
+		pDocElem-&gt;get_outerHTML(&amp;bstrHTML); 
+		pDocElem-&gt;Release(); 
+		
+		USES_CONVERSION; 
+		MessageBox(OLE2T(bstrHTML),_T("源文件")); 
+		SysFreeString(bstrHTML); 
+	}
+//---------------------------------------------------------------------------------------
+
+
+
+
+2种方法执行js
+//--------------------------------------------------------------------------------------------
+	IHTMLDocument2 *pDoc=(IHTMLDocument2 *)(m_page.GetHtmlDocument()); 
+	/*
+	//----------------------第一种方法------------
+	if (pDoc != NULL)
+	{
+		IDispatch *spDisp = NULL;
+		HRESULT hr  = pDoc-&gt;get_Script(&amp;spDisp);
+		if (spDisp)
+		{
+            // Evaluate is the name of the script function.
+            OLECHAR FAR* szMember = L"selectAll";
+            DISPID dispid;
+			
+            HRESULT hr = spDisp-&gt;GetIDsOfNames(IID_NULL, &amp;szMember, 1,
+				LOCALE_SYSTEM_DEFAULT, &amp;dispid);
+			
+            if (SUCCEEDED(hr))
+            {
+				COleVariant vtResult;
+				static BYTE parms[] = VTS_BSTR;
+				
+				COleDispatchDriver dispDriver(spDisp, FALSE);
+				
+				dispDriver.InvokeHelper(dispid, DISPATCH_METHOD, VT_VARIANT,
+					(void*)&amp;vtResult, parms,
+					"5+9");
+				CString rest;
+				rest.Format("%d",vtResult.lVal);
+				AfxMessageBox(rest);
+            }
+		}
+		
+	}
+	*/
+
+  //----------------------第2种方法------------
+	if (pDoc != NULL)
+	{
+		IDispatch *pdis = NULL;
+		HRESULT hr  = pDoc-&gt;get_Script(&amp;pdis);
+		CComVariant avarParams[5] = {"123","456","789","000"};
+        DISPPARAMS dispParams = {avarParams, NULL, 2, 0};
+		//-----------------------参数数组，  ，参数个数，
+
+		UINT nArgErr = (UINT)-1;      // initialize to invalid arg
+		CComVariant result;
+		EXCEPINFO excepInfo;
+		if(pdis)
+		{
+			DISPID tmpDispID = 0;
+			LPOLESTR func = L"selectAll"; // javascript 函数名
+			hr = pdis-&gt;GetIDsOfNames(GUID_NULL, &amp;func, 1, LOCALE_SYSTEM_DEFAULT, &amp;tmpDispID);
+			if(S_OK == hr)
+				hr = pdis-&gt;Invoke(tmpDispID, IID_NULL, LOCALE_USER_DEFAULT,
+				DISPATCH_METHOD, &amp;dispParams, &amp;result, &amp;excepInfo, &amp;nArgErr);
+			
+			CString rest;
+			//rest.Format("%d",result.lVal);
+			rest=result.bstrVal;
+			AfxMessageBox(rest);
+		}
+		
+	}
+//-------------------------------------------------------------------------------------------------
+
+
+
+函数化调用执行js
+.h
+//-------------------------------------------------------------------------------------------
+	struct tagVARIANT * runjs(LPOLESTR func,struct tagVARIANT * avarParams,int nn);
+//--------------------------------------------------------------------------------------------
+.cpp
+
+//-----------------------------------------------------------------------------------------------
+struct tagVARIANT * CanlinHtmlEditDlg::runjs(LPOLESTR func,struct tagVARIANT * avarParams,int nn)
+{
+	IHTMLDocument2 *pDoc=(IHTMLDocument2 *)(m_anlinedithtmlpage.GetHtmlDocument()); 
+	/*
+	//----------------------第一种方法------------
+	if (pDoc != NULL)
+	{
+		IDispatch *spDisp = NULL;
+		HRESULT hr  = pDoc-&gt;get_Script(&amp;spDisp);
+		if (spDisp)
+		{
+            // Evaluate is the name of the script function.
+            OLECHAR FAR* szMember = L"selectAll";
+            DISPID dispid;
+			
+            HRESULT hr = spDisp-&gt;GetIDsOfNames(IID_NULL, &amp;szMember, 1,
+				LOCALE_SYSTEM_DEFAULT, &amp;dispid);
+			
+            if (SUCCEEDED(hr))
+            {
+				COleVariant vtResult;
+				static BYTE parms[] = VTS_BSTR;
+				
+				COleDispatchDriver dispDriver(spDisp, FALSE);
+				
+				dispDriver.InvokeHelper(dispid, DISPATCH_METHOD, VT_VARIANT,
+					(void*)&amp;vtResult, parms,
+					"5+9");
+				CString rest;
+				rest.Format("%d",vtResult.lVal);
+				AfxMessageBox(rest);
+            }
+		}
+		
+	}
+	*/
+	CComVariant result;
+	if (pDoc != NULL)
+	{
+		IDispatch *pdis = NULL;
+		HRESULT hr  = pDoc-&gt;get_Script(&amp;pdis);
+        DISPPARAMS dispParams = {avarParams, NULL, nn, 0};
+		//-----------------------参数数组，  ，参数个数，
+		UINT nArgErr = (UINT)-1;      // initialize to invalid arg
+		EXCEPINFO excepInfo;
+		if(pdis)
+		{
+			DISPID tmpDispID = 0;
+			//LPOLESTR func = L"selectAll"; // javascript 函数名
+			hr = pdis-&gt;GetIDsOfNames(GUID_NULL, &amp;func, 1, LOCALE_SYSTEM_DEFAULT, &amp;tmpDispID);
+			if(S_OK == hr)
+				hr = pdis-&gt;Invoke(tmpDispID, IID_NULL, LOCALE_USER_DEFAULT,
+				DISPATCH_METHOD, &amp;dispParams, &amp;result, &amp;excepInfo, &amp;nArgErr);
+			
+		//	CString rest;
+			//rest.Format("%d",result.lVal);
+		//	rest=result.bstrVal;
+		//	AfxMessageBox(rest);
+		}
+		
+	}
+	return &amp;result;
+}
+//----------------------------------------------------------------------------------------------------------
+
+调用测试
+void CanlinHtmlEditDlg::OnButton4() 
+{
+	// TODO: Add your control notification handler code here
+	LPOLESTR func = L"selectAll";
+	CComVariant Params[5] = {"123","456","789","000"};
+	CComVariant *result=(CComVariant *)runjs(func,Params,3);
+	//参数逆序，即当个数为2时，"456"为第一参数，"123"为第二参数
+	//当个数为3时，"789"为第一参数，"456"为第二参数，"123"为第三参数
+	
+	CString rest;
+	//rest.Format("%d",result.lVal);
+	rest=result-&gt;bstrVal;
+	AfxMessageBox(rest);
+}
+
+保存
+void CanlinHtmlEditDlg::OnButton5() 
+{
+	// TODO: Add your control notification handler code here
+		IHTMLDocument2 *pDoc=(IHTMLDocument2 *)(m_anlinedithtmlpage.GetHtmlDocument()); 
+	IHTMLWindow2 *pHTMLWnd=NULL; 
+	IHTMLDocument2 *pFrameDoc=NULL; 
+	IHTMLFramesCollection2 *pFramesCollection=NULL; 
+	LPDISPATCH lpDispatch; 
+  
+	long p; 
+	VARIANT varindex,varresult; 
+	varresult.vt=VT_DISPATCH; 
+	varindex.vt = VT_I4; 
+//	pDoc-&gt;
+	if(pDoc!=NULL) 
+	{ 
+		HRESULT hr=pDoc-&gt;get_frames(&amp;pFramesCollection); 
+		if(SUCCEEDED(hr)&amp;&amp;pFramesCollection!=NULL) 
+		{ 
+			hr=pFramesCollection-&gt;get_length(&amp;p); 
+			if(SUCCEEDED(hr)) 
+				for(int i=0; i&lt;p; i++) 
+				{ 
+					varindex.lVal = i; 
+					if(pFramesCollection-&gt;item(&amp;varindex, &amp;varresult) ==S_OK) 
+					{ 
+						lpDispatch=(LPDISPATCH)varresult.ppdispVal; 
+						if (SUCCEEDED(lpDispatch-&gt;QueryInterface(IID_IHTMLWindow2, (LPVOID *)&amp;pHTMLWnd))) 
+						{ 
+							if(SUCCEEDED(pHTMLWnd-&gt;get_document(&amp;pFrameDoc))) 
+							{ 
+								//work with the pFrameDoc... 
+								IHTMLElement*   pDocElem=NULL; 
+								hr   =   pFrameDoc-&gt;get_body(&amp;pDocElem); 
+								
+								
+								if(pDocElem) 
+								{ 
+									
+									// ASSERT(SUCCEEDED(hr)); 
+									BSTR   bstrHTML; 
+									pDocElem-&gt;get_outerHTML(&amp;bstrHTML); 
+									pDocElem-&gt;Release(); 
+									USES_CONVERSION; 
+									UpdateData();
+									WinExec("cmd.exe /c md \""+savehtmlfilepath+m_edit_title+"\"",SW_SHOWNORMAL);
+									::Sleep(100);
+									WinExec("cmd.exe /c md \""+savehtmlfilepath+m_edit_title+"\\image\"",SW_SHOWNORMAL);
+									::Sleep(100);
+									WinExec("cmd.exe /c md \""+savehtmlfilepath+m_edit_title+"\\file\"",SW_SHOWNORMAL);
+									::Sleep(100);
+									CFile mFile2(_T(savehtmlfilepath+m_edit_title+"\\"+m_edit_title+".htm"), CFile::modeWrite|CFile::modeCreate); 
+									mFile2.Write(OLE2T(bstrHTML),lstrlenW(bstrHTML)); 
+									
+									mFile2.Flush(); 
+									mFile2.Close(); 
+									MessageBox("成功");
+									MessageBox(OLE2T(bstrHTML),   _T("源文件")); 
+									SysFreeString(bstrHTML); 
+								} 
+								pFrameDoc-&gt;Release(); 
+								
+							} 
+							pHTMLWnd-&gt;Release(); 
+							pHTMLWnd=NULL; 
+						} 
+					} 
+				} 
+				pFramesCollection-&gt;Release(); 
+		} 
+		pDoc-&gt;Release(); 
+	} 
+}
+
+
+载入
+void CanlinHtmlEditDlg::OnButton6() 
+{
+	// TODO: Add your control notification handler code here
+	//document.getElementById("HtmlEditor").src=file2.value
+	LPOLESTR func = L"jseval";
+	CComVariant Params[5];
+	CString dd="document\.getElementById\(\"HtmlEditor\"\)\.src\=\"D\:\\\\00\.htm\"";
+	Params[0]=CComVariant(dd);
+	CComVariant *result=(CComVariant *)runjs(func,Params,1);
+}
+
+void CanlinHtmlEditDlg::OnButton6() 
+{
+	// TODO: Add your control notification handler code here
+	//document.getElementById("HtmlEditor").src=file2.value
+	LPOLESTR func = L"openfile";
+	CComVariant Params[5];
+	CString dd=savehtmlfilepath+"\\"+m_edit_title+".htm";
+	Params[0]=CComVariant(dd);
+	CComVariant *result=(CComVariant *)runjs(func,Params,1);
+}
+
+
+
+完善“添加”
+void CWebVampireDlg::OnMAdd() 
+{
+	// TODO: Add your command handler code here
+	CString path;
+	GetCurrentDirectory(MAX_PATH,path.GetBuffer(MAX_PATH));
+	path.ReleaseBuffer();
+	path+="\\"+GetFullname()+"\\";
+	AfxMessageBox(path);
+	CanlinHtmlEditDlg adddlg;
+	adddlg.savehtmlfilepath=path;
+	adddlg.DoModal();
+
+	
+	HTREEITEM hItemsel=m_tree_ctrl.GetSelectedItem();
+	CString hItemseltext = m_tree_ctrl.GetItemText(hItemsel);
+	CString hItemfullname=GetFullname();
+	HTREEITEM hItemselparent=m_tree_ctrl.GetParentItem(hItemsel);
+	m_tree_ctrl.DeleteItem(hItemsel);
+	HTREEITEM hItemselparent22=m_tree_ctrl.InsertItem(hItemseltext,hItemselparent);
+	m_tree_ctrl.SetItemImage(hItemselparent22,2,3); 
+	BrowseDir(hItemfullname, hItemselparent22);//只刷新修改部分，提高效率
+	
+	m_tree_ctrl.Expand(hItemselparent22,TVE_EXPAND);
+}
+
+
+设置标题
+void CanlinHtmlEditDlg::Ontitle() 
+{
+	// TODO: Add your control notification handler code here
+LPOLESTR func = L"settitle";
+	CComVariant Params[5];
+	UpdateData();
+	Params[0]=CComVariant(m_edit_title);
+CComVariant *result=(CComVariant *)runjs(func,Params,1);
+
+}
+设置原始链接
+void CanlinHtmlEditDlg::OnsavefromURL() 
+{
+	// TODO: Add your control notification handler code here
+	LPOLESTR func = L"getalink";
+	CComVariant Params[5];
+	UpdateData();
+	CString dd=m_edit_title;
+	Params[0]=CComVariant(dd);
+	CComVariant *result=(CComVariant *)runjs(func,Params,1);	
+}
+设置相关文件
+void CanlinHtmlEditDlg::Onlockfile() 
+{
+	// TODO: Add your control notification handler code here
+	LPOLESTR func = L"getfile";
+	CComVariant Params[5];
+	UpdateData();
+	CString dd=m_edit_lockfile;
+	Params[0]=CComVariant(dd);
+	CComVariant *result=(CComVariant *)runjs(func,Params,1);	
+}
+
+
+由于修改标题并不能立刻看到，故放到EN_KILLFOCUS消息中
+void CanlinHtmlEditDlg::OnKillfocusEDITtitle() 
+{
+	// TODO: Add your control notification handler code here
+	Ontitle();
+}
+修改原始链接和相关文件实时性高，放到EN_CHANGE中
+void CanlinHtmlEditDlg::OnChangeEDITsaveformURL() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+	
+	// TODO: Add your control notification handler code here
+	OnsavefromURL();
+}
+
+void CanlinHtmlEditDlg::OnChangeEDITlockfile() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+	
+	// TODO: Add your control notification handler code here
+	Onlockfile();
+}
+添加“相关文件”的“浏览”按钮处理（如果是文件夹，则需在编辑框手动修改）
+void CanlinHtmlEditDlg::OnBUTTONlockfile() 
+{
+	// TODO: Add your control notification handler code here
+	CFileDialog FDlg(TRUE , "*.*" , NULL , OFN_HIDEREADONLY , "所有文件(*.*) |*.*||" );
+	if(FDlg.DoModal() == IDOK)		
+	{
+		m_edit_lockfile = FDlg.GetPathName();
+		UpdateData(false);
+		Onlockfile();	
+	}
+}
+
+图片本地化处理
+void CanlinHtmlEditDlg::OnButton8() 
+{
+	// TODO: Add your control notification handler code here
+	LPOLESTR func = L"imgsrc2";
+	CComVariant Params[5];
+	CComVariant *result=(CComVariant *)runjs(func,Params,0);	
+}
+图片保存
+void CanlinHtmlEditDlg::OnButton9() 
+{
+	// TODO: Add your control notification handler code here
+	LPOLESTR func = L"getIframeImgURL";
+	CComVariant Params[5];
+	CComVariant *result=(CComVariant *)runjs(func,Params,0);
+	
+
+	CString rest,appname;
+	rest=result-&gt;bstrVal;
+	AfxMessageBox(rest);
+	for(int i=0;AfxExtractSubString(appname,rest,i,' ');i++)
+	{
+	//AfxExtractSubString(appname, fullstring, i, ' '); // 取出第i个子串
+	//AfxMessageBox(appname);
+		downloadimg(appname);
+	}
+}
+#include &lt;afxinet.h&gt;
+bool CanlinHtmlEditDlg::downloadimg(CString imgurl)
+{
+		CString szFile;
+	//szFile="http://www.baidu.com/img/logo-yy.gif";
+//	UpdateData(TRUE);
+	szFile=imgurl;//m_fileurl;
+	char				filebuf[512];
+	CInternetSession	netSession;
+	CStdioFile			*fTargFile;
+	fTargFile = netSession.OpenURL(szFile,1,INTERNET_FLAG_TRANSFER_BINARY | INTERNET_FLAG_RELOAD);
+	// 在当前目录创建新的目标文件
+	CFile fDestFile(savehtmlfilepath+m_edit_title+"\\image\"", CFile::modeCreate | CFile::modeWrite | CFile::typeBinary);
+	int byteswrite;		// 写入文件的字节数
+	while (byteswrite = fTargFile-&gt;Read(filebuf, 512))	// 读取文件
+	{
+		fDestFile.Write(filebuf, byteswrite);	// 将实际数据写入文件
+	}
+		
+	fDestFile.Close();
+//	AfxMessageBox("下载完成");
+return true;
+}</PRE><BR><A id=原始链接 href="" target=_blank><FONT style="BACKGROUND-COLOR: #00ff00" color=#ff0033 size=5>原始链接:</FONT></A><BR><A id=相关文件 href="" target=_blank><FONT style="BACKGROUND-COLOR: #000033" color=#ffff33><STRONG>相关文件:</STRONG></FONT><FONT color=#0000ff></FONT></A></BODY>

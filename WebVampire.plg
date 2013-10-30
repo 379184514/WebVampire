@@ -1,0 +1,40 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: WebVampire - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP418.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fp"Release/WebVampire.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\Administrator\×ÀÃæ\WebVampire2(×îÖÕ°æv1.0)\WebVampireDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP418.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP419.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/WebVampire.pdb" /machine:I386 /out:"Release/WebVampire.exe" 
+".\Release\anlinHtmlEditDlg.obj"
+".\Release\HtmlCtrl.obj"
+".\Release\StdAfx.obj"
+".\Release\WebVampire.obj"
+".\Release\WebVampireDlg.obj"
+".\Release\WebVampire.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP419.tmp"
+<h3>Output Window</h3>
+Compiling...
+WebVampireDlg.cpp
+Linking...
+Creating command line "bscmake.exe /nologo /o"Release/WebVampire.bsc"  ".\Release\StdAfx.sbr" ".\Release\anlinHtmlEditDlg.sbr" ".\Release\HtmlCtrl.sbr" ".\Release\WebVampire.sbr" ".\Release\WebVampireDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+WebVampire.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
